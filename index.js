@@ -1,8 +1,9 @@
+import "dotenv/config";
 import express from "express";
 
 const app = express();
 // const router = app.router()
-const port = 3001;
+const port = process.env.PORT;
 
 app.get("/", (req, res) => {
   // logic
