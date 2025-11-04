@@ -1,9 +1,12 @@
 import "dotenv/config";
 import express from "express";
+import users from "./users/index.js";
 
 const app = express();
-// const router = app.router()
+
 const port = process.env.PORT;
+
+app.use("/users", users);
 
 app.get("/", (req, res) => {
   // logic
@@ -18,6 +21,18 @@ app.post("/", (req, res) => {
   // res.status(500).json({error: 'an error has occured' })
   res.status(200).json({
     number: Math.random(),
+  });
+});
+
+app.use((req, res, next) => {
+  const error = new Error("Not found");
+  error.status = 404;
+  next(error);
+});
+
+app.use((error, req, res, next) => {
+  res.status(error.status || 500).json({
+    error: error.message,
   });
 });
 
