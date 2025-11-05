@@ -3,6 +3,7 @@ import express from "express";
 import users from "./users/index.js";
 
 const app = express();
+app.use(express.json()); // for parsing application/json
 
 const port = process.env.PORT;
 
