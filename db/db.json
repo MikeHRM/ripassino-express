@@ -1,16 +1,9 @@
 {
   "users": [
-    { "email": "emaill", "password": "password" },
-    { "email": "pippo", "password": "pluto" },
     {
-      "id": "ed4de38c-489d-4cf5-a430-34e96da1520e",
-      "email": "pippo",
-      "password": "pluto"
-    },
-    {
-      "id": "ad9a0b91-7e31-43de-890c-feabbf5d7fc6",
-      "email": "pippo",
-      "password": "$2b$05$GONdPNvXn5ffK5N5DXwMme0nH2tVWOHauD50SY0G6qpvVEe8yOVOq"
+      "id": "6b38824a-cb1f-4bdc-8d53-c6b5f9241020",
+      "email": "test@test.com",
+      "password": "$2b$05$RLNLkI28xxhkvon0YMak2OoISCvxmTVt9hQYJLGAd1JWplCJkRrhS"
     }
   ]
 }
