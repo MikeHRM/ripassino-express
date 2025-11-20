@@ -98,7 +98,7 @@ apiRouter.post("/login", async (req, res) => {
           {
             email: req.body.email,
           },
-          "shhhhh"
+          process.env.LOGIN_SECRET
         );
 
         res.status(200).json({
@@ -116,14 +116,41 @@ apiRouter.post("/login", async (req, res) => {
   }
 });
 
-apiRouter.get("/", async (req, res) => {
-  const message = await bcrypt.compare(
-    "pluto",
-    "$2b$05$GONdPNvXn5ffK5N5DXwMme0nH2tVWOHauD50SY0G6qpvVEe8yOVOq"
-  );
-  res.status(200).json({
-    message,
-  });
+/**
+ * @description GET method for retrieving account info of the given email
+ * @param {string} email  has to be a valid email
+ */
+apiRouter.get("/account", (req, res) => {
+  if (!req.body.email) {
+    res.status(400).json({
+      message: "Please provide valid email",
+    });
+  } else {
+    // token validity
+
+    // given an email
+    // add user to DB
+    const filePath = path.join(__dirname, "../db/db.json");
+    const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+
+    // verify if the user with given email already exists
+    const userAlreadyExists = data.users.find(
+      (user) => user.email === req.body.email
+    );
+
+    // if email exists => account object
+    if (userAlreadyExists) {
+      res.status(200).json({
+        email: userAlreadyExists.email,
+        id: userAlreadyExists.id,
+      });
+    } // if email does not exist => error
+    else {
+      res.status(404).json({
+        message: "user does not exist",
+      });
+    }
+  }
 });
 
 export default apiRouter;
