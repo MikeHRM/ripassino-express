@@ -1,10 +1,11 @@
 import { Router } from "express";
-import fs, { read } from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { v4 } from "uuid";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { authMiddleware } from "../middleware/auth-middleware.js";
 
 // recreate __filename and __dirname in ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -120,14 +121,12 @@ apiRouter.post("/login", async (req, res) => {
  * @description GET method for retrieving account info of the given email
  * @param {string} email  has to be a valid email
  */
-apiRouter.get("/account", (req, res) => {
+apiRouter.get("/account", authMiddleware, (req, res) => {
   if (!req.body.email) {
     res.status(400).json({
       message: "Please provide valid email",
     });
   } else {
-    // token validity
-
     // given an email
     // add user to DB
     const filePath = path.join(__dirname, "../db/db.json");
