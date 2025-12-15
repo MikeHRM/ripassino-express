@@ -99,7 +99,8 @@ apiRouter.post("/login", async (req, res) => {
           {
             email: req.body.email,
           },
-          process.env.LOGIN_SECRET
+          process.env.LOGIN_SECRET,
+          { expiresIn: "1h" }
         );
 
         res.status(200).json({
