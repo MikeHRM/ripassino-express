@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { getDB } from "../db/mongodb.js";
+import { redisClient } from "../db/redis.js";
 
 const apiRouter = Router();
 
@@ -29,15 +30,31 @@ apiRouter.get("/filter", async (req, res) => {
 });
 
 apiRouter.get("/:restaurant_id", async (req, res) => {
-  const restaurantsCollection = getRestaurantsCollection();
-  const restaturant = await restaurantsCollection.findOne({
-    restaurant_id: req.params.restaurant_id,
-  });
+  const cachedRestaurant = await redisClient.get(
+    `restaurant-${req.params.restaurant_id}`
+  );
 
-  res.status(200).json({
-    message: " ok",
-    restaturant,
-  });
+  if (cachedRestaurant !== null) {
+    res.status(200).json({
+      message: " ok",
+      restaturant: JSON.parse(cachedRestaurant),
+    });
+  } else {
+    const restaurantsCollection = getRestaurantsCollection();
+    const restaturant = await restaurantsCollection.findOne({
+      restaurant_id: req.params.restaurant_id,
+    });
+
+    res.status(200).json({
+      message: " ok",
+      restaturant,
+    });
+
+    await redisClient.set(
+      `restaurant-${req.params.restaurant_id}`,
+      JSON.stringify(restaturant)
+    );
+  }
 });
 
 apiRouter.get("/", async (req, res) => {
